@@ -1,18 +1,16 @@
-/* Reset básico */
+/* ============================================
+   RESET BÁSICO
+   ============================================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ============================================
+   BODY + FONDO QUE APARECE POCO A POCO
+   ============================================ */
 body {
-    /* Imagen de fondo */
-    background-image: url('https://www.dropbox.com/scl/fi/nddf593x9o9od7ohheiyn/fondo-de-fresas.jpeg?rlkey=zpkj0f2ptizku88g8zzba19hp&st=hbil8jqh&raw=1');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     display: flex;
@@ -22,44 +20,186 @@ body {
     color: white;
     position: relative;
     overflow: hidden;
+
+    /* Fondo negro de base mientras aparece la imagen */
+    background-color: #000;
 }
 
-/* --- ESTILOS DEL BOTÓN --- */
+/* Capa con la imagen del fondo que aparece lentamente */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background-image: url('https://www.dropbox.com/scl/fi/nddf593x9o9od7ohheiyn/fondo-de-fresas.jpeg?rlkey=zpkj0f2ptizku88g8zzba19hp&st=hbil8jqh&raw=1');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    /* ✨ Aparece poco a poco con blur → nítido + zoom suave */
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(1.1);
+
+    animation: fadeInFondo 4s ease-out forwards,
+               zoomFondo 7s ease-out forwards;
+}
+
+/* ✨ Aparecer gradualmente */
+@keyframes fadeInFondo {
+    0% {
+        opacity: 0;
+        filter: blur(12px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* ✨ Zoom sutil mientras aparece */
+@keyframes zoomFondo {
+    0%   { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================
+   ESTILOS DEL BOTÓN
+   ============================================ */
 .btn-fresas {
-    /* Posicionamiento en la parte inferior */
     position: absolute;
     bottom: 40px;
     left: 50%;
-    transform: translateX(-50%);
-    
-    /* Apariencia */
-    background-color: #b51b20; /* Rojo similar a la imagen */
+    transform: translateX(-50%) translateY(120px);
+    opacity: 0;
+
+    background-color: #b51b20;
     color: #ffffff;
     text-decoration: none;
     padding: 16px 0;
     width: 85%;
     max-width: 400px;
     text-align: center;
-    border-radius: 50px; /* Forma de píldora */
-    
-    /* Tipografía */
+    border-radius: 50px;
+
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1px;
-    
-    /* Efectos y sombras */
+
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+
     cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+
+    /* ✨ Entrada del botón: sube desde abajo con rebote suave */
+    animation: slideUpButton 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
+}
+
+/* ✨ Keyframe de entrada del botón */
+@keyframes slideUpButton {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(120px) scale(0.9);
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+/* ✨ Halo pulsante alrededor del botón */
+.btn-fresas::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    box-shadow: 0 0 0 0 rgba(181, 27, 32, 0.55);
+    animation: pulseRing 2.6s ease-out 2.2s infinite;
+    pointer-events: none;
+}
+
+@keyframes pulseRing {
+    0%   { box-shadow: 0 0 0 0 rgba(181, 27, 32, 0.55); }
+    70%  { box-shadow: 0 0 0 22px rgba(181, 27, 32, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(181, 27, 32, 0); }
+}
+
+/* Texto interno */
+.btn-text {
+    display: inline-block;
+    transition: transform 0.15s ease;
 }
 
 /* Efecto al pasar el mouse */
 .btn-fresas:hover {
     background-color: #d32128;
     transform: translateX(-50%) scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Efecto al hacer clic */
+/* Feedback al presionar */
 .btn-fresas:active {
-    transform: translateX(-50%) scale(0.98);
+    transform: translateX(-50%) scale(0.96);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.btn-fresas:active .btn-text {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   ESTADO "CARGANDO" (SPINNER)
+   ============================================ */
+.btn-fresas.loading {
+    pointer-events: none;
+    background-color: #8d1318;
+    animation-play-state: paused;
+}
+
+.btn-fresas.loading::after {
+    animation: none;
+}
+
+.btn-fresas.loading .btn-text::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spinner 0.7s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   ACCESIBILIDAD: reducir movimiento
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    .btn-fresas,
+    .btn-fresas::after {
+        animation: none !important;
+    }
+    body::before { opacity: 1; filter: none; transform: none; }
+    .btn-fresas {
+        opacity: 1;
+        transform: translateX(-50%);
+    }
 }

@@ -1,0 +1,65 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Imagen de fondo */
+    background-image: url('https://www.dropbox.com/scl/fi/nddf593x9o9od7ohheiyn/fondo-de-fresas.jpeg?rlkey=zpkj0f2ptizku88g8zzba19hp&st=hbil8jqh&raw=1');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- ESTILOS DEL BOTÓN --- */
+.btn-fresas {
+    /* Posicionamiento en la parte inferior */
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Apariencia */
+    background-color: #b51b20; /* Rojo similar a la imagen */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 16px 0;
+    width: 85%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 50px; /* Forma de píldora */
+    
+    /* Tipografía */
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    
+    /* Efectos y sombras */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Efecto al pasar el mouse */
+.btn-fresas:hover {
+    background-color: #d32128;
+    transform: translateX(-50%) scale(1.02);
+}
+
+/* Efecto al hacer clic */
+.btn-fresas:active {
+    transform: translateX(-50%) scale(0.98);
+}
